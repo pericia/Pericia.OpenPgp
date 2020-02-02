@@ -14,6 +14,28 @@ namespace Pericia.OpenPgp
 {
     public class OpenPgpKeyManagement : IOpenPgpKeyManagement
     {
+        private const string DEFAULT_KEY_SERVER = "https://keys.openpgp.org";
+
+        public Task<PgpPublicKey?> SearchHttpKeyServer(string address) => SearchHttpKeyServer(new MailAddress(address), DEFAULT_KEY_SERVER);
+        public Task<PgpPublicKey?> SearchHttpKeyServer(MailAddress address) => SearchHttpKeyServer(address, DEFAULT_KEY_SERVER);
+        public Task<PgpPublicKey?> SearchHttpKeyServer(string address, string keyServer) => SearchHttpKeyServer(new MailAddress(address), keyServer);
+
+        public async Task<PgpPublicKey?> SearchHttpKeyServer(MailAddress address, string keyServer)
+        {
+            var url = $"{keyServer}/pks/lookup?op=get&options=mr&search={address.Address}";
+
+            var request = new HttpClient();
+            var response = await request.GetAsync(url);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var key = ReadPublicKey(await response.Content.ReadAsStreamAsync());
+
+                return key;
+            }
+
+            return null;
+        }
 
         public Task<PgpPublicKey?> SearchWebKeyDirectory(string address) => SearchWebKeyDirectory(new MailAddress(address));
 
@@ -72,5 +94,6 @@ namespace Pericia.OpenPgp
         }
 
         public string GetHashedUser(MailAddress address) => GetHashedUser(address.User);
+
     }
 }

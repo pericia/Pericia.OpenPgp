@@ -9,9 +9,12 @@ namespace Pericia.OpenPgp
 {
     public interface IOpenPgpKeyManagement
     {
+        Task<PgpPublicKey?> SearchHttpKeyServer(string address);
+        Task<PgpPublicKey?> SearchHttpKeyServer(MailAddress address);
+        Task<PgpPublicKey?> SearchHttpKeyServer(string address, string keyServer);
+        Task<PgpPublicKey?> SearchHttpKeyServer(MailAddress address, string keyServer);
 
         Task<PgpPublicKey?> SearchWebKeyDirectory(string address);
-
         Task<PgpPublicKey?> SearchWebKeyDirectory(MailAddress address);
 
         string GetHashedUser(string address);
