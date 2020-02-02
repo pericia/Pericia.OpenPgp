@@ -11,7 +11,7 @@ namespace Pericia.OpenPgp.Tests
         [Fact]
         public void EncryptMessageTest()
         {
-            IOpenPgp pgp = new OpenPgpEncryption();
+            IOpenPgpEncryption pgp = new OpenPgpEncryption();
 
             //TODO test encryption and decryption with test public and private keys        
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Pericia.OpenPgp
 {
-    public interface IOpenPgp
+    public interface IOpenPgpEncryption
     {
         string Encrypt(string message, PgpPublicKey publicKey);
         string Encrypt(byte[] message, PgpPublicKey publicKey);

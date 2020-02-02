@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Pericia.OpenPgp
 {
-    public class OpenPgpEncryption : IOpenPgp
+    public class OpenPgpEncryption : IOpenPgpEncryption
     {
         public string Encrypt(string message, PgpPublicKey publicKey)
         {
