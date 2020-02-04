@@ -17,7 +17,7 @@ namespace Pericia.OpenPgp
         Task<PgpPublicKey?> SearchWebKeyDirectory(string address);
         Task<PgpPublicKey?> SearchWebKeyDirectory(MailAddress address);
 
-        string GetHashedUser(string address);
-        string GetHashedUser(MailAddress address);
+        string GetHashedUserId(string userName);
+        string GetHashedUserId(MailAddress address);
     }
 }

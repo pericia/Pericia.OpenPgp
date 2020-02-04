@@ -10,9 +10,19 @@ Still in early development, expect lots of fixes and API changes for quite some 
 
 `IOpenPgpKeyManagement`  
 
+- `SearchHttpKeyServer(address, keyServer)`
+Search the public key for the e-mail address on the specified key server
+
+- `SearchHttpKeyServer(address)`
+Search the public key for the e-mail address on the default key server [keys.openpgp.org](https://keys.openpgp.org)
+
 - `SearchWebKeyDirectory(address)`  
-Use the [Web Key Directory (WKD)](https://wiki.gnupg.org/WKD) protocol to search an available public key for the e-mail address
-  
+Use the [Web Key Directory (WKD)](https://wiki.gnupg.org/WKD) protocol to search the public key for the e-mail address
+
+- `GetHashedUserId(userName)`
+Generate the hashed user-id (hu), used by WKD protocol.  
+The hu is the user part of the e-mail address, SHA-1 hashed and z-base32 converted.
+
 `IOpenPgpEncryption`
 
 - `Encrypt(message, publicKey)`  

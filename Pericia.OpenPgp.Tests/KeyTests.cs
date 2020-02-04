@@ -67,7 +67,7 @@ namespace Pericia.OpenPgp.Tests
         {
             IOpenPgpKeyManagement pgpKeys = new OpenPgpKeyManagement();
 
-            var hu = pgpKeys.GetHashedUser("me");
+            var hu = pgpKeys.GetHashedUserId("me");
             Assert.Equal("s8y7oh5xrdpu9psba3i5ntk64ohouhga", hu);
         }
     }

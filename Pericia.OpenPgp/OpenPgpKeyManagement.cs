@@ -42,7 +42,7 @@ namespace Pericia.OpenPgp
         public async Task<PgpPublicKey?> SearchWebKeyDirectory(MailAddress address)
         {
             var host = address.Host;
-            var hu = GetHashedUser(address);
+            var hu = GetHashedUserId(address);
 
             var url = $"https://{host}/.well-known/openpgpkey/hu/{hu}";
 
@@ -78,7 +78,7 @@ namespace Pericia.OpenPgp
             throw new ArgumentException("Can't find encryption key in key ring.");
         }
 
-        public string GetHashedUser(string userName)
+        public string GetHashedUserId(string userName)
         {
             if (string.IsNullOrEmpty(userName)) throw new ArgumentException("userName can't be empty", nameof(userName));
 
@@ -93,7 +93,7 @@ namespace Pericia.OpenPgp
             return hu;
         }
 
-        public string GetHashedUser(MailAddress address) => GetHashedUser(address.User);
+        public string GetHashedUserId(MailAddress address) => GetHashedUserId(address.User);
 
     }
 }
