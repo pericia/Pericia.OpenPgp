@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Pericia.OpenPgp
 {
-    public class OpenPgpKeyManagement : IOpenPgpKeyManagement
+    public class OpenPgpKeyManagement : IOpenPgpKeySearch
     {
         private const string DEFAULT_KEY_SERVER = "https://keys.openpgp.org";
 

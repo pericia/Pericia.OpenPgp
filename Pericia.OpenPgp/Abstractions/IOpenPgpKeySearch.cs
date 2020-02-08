@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Pericia.OpenPgp
 {
-    public interface IOpenPgpKeyManagement
+    public interface IOpenPgpKeySearch
     {
         Task<PgpPublicKey?> SearchHttpKeyServer(string address);
         Task<PgpPublicKey?> SearchHttpKeyServer(MailAddress address);

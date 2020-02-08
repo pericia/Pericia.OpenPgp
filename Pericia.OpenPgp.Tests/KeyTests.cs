@@ -14,7 +14,7 @@ namespace Pericia.OpenPgp.Tests
         [Fact]
         public async Task SearchErrorTest()
         {
-            IOpenPgpKeyManagement pgpKeys = new OpenPgpKeyManagement();
+            IOpenPgpKeySearch pgpKeys = new OpenPgpKeyManagement();
 
             await Assert.ThrowsAsync<FormatException>(() => pgpKeys.SearchWebKeyDirectory("notanaddress"));
 
@@ -29,7 +29,7 @@ namespace Pericia.OpenPgp.Tests
         [Fact]
         public async Task SearchWebKeyDirectoryTest()
         {
-            IOpenPgpKeyManagement pgpKeys = new OpenPgpKeyManagement();
+            IOpenPgpKeySearch pgpKeys = new OpenPgpKeyManagement();
 
             var email = "glacasa@protonmail.com";
             var key = await pgpKeys.SearchWebKeyDirectory(email);
@@ -42,7 +42,7 @@ namespace Pericia.OpenPgp.Tests
         [Fact]
         public async Task SearchHttpKeyserverProtocol()
         {
-            IOpenPgpKeyManagement pgpKeys = new OpenPgpKeyManagement();
+            IOpenPgpKeySearch pgpKeys = new OpenPgpKeyManagement();
 
             var email = "glacasa@protonmail.com";
             var key = await pgpKeys.SearchHttpKeyServer(email);
@@ -65,7 +65,7 @@ namespace Pericia.OpenPgp.Tests
         [Fact]
         public void HashedUserTest()
         {
-            IOpenPgpKeyManagement pgpKeys = new OpenPgpKeyManagement();
+            IOpenPgpKeySearch pgpKeys = new OpenPgpKeyManagement();
 
             var hu = pgpKeys.GetHashedUserId("me");
             Assert.Equal("s8y7oh5xrdpu9psba3i5ntk64ohouhga", hu);

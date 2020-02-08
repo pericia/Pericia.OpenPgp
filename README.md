@@ -8,7 +8,7 @@ Still in early development, expect lots of fixes and API changes for quite some 
 
 ## API
 
-`IOpenPgpKeyManagement`  
+`IOpenPgpKeySearch`  
 
 - `SearchHttpKeyServer(address, keyServer)`
 Search the public key for the e-mail address on the specified key server
@@ -25,5 +25,11 @@ The hu is the user part of the e-mail address, SHA-1 hashed and z-base32 convert
 
 `IOpenPgpEncryption`
 
+- `GenerateKeyPair(string identity, string passPhrase)`  
+Generate a new pgp key pair
+
 - `Encrypt(message, publicKey)`  
 Encypt the message using the provided public key
+
+- `Decrypt(message, privateKey, passPhrase)`
+Decrypt the message using the provided private key and its pass phrase
