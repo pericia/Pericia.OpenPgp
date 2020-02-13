@@ -8,6 +8,28 @@ Still in early development, expect lots of fixes and API changes for quite some 
 
 ## API
 
+`IOpenPgpEncryption`
+
+- `Encrypt(message, publicKey)`  
+Encypt the message using the provided public key
+
+- `Decrypt(message, secretKey, passPhrase)`
+Decrypt the message using the provided private key and its pass phrase
+
+`IOpenPgpKeyManagement`  
+
+- `GenerateKeyPair(string identity, string passPhrase)`  
+Generate a new pgp key pair
+
+- `Export(key)`
+Export a public key or secret key to armored string
+
+- `LoadPublicKey(key)`
+Load a public key from an armored string
+
+- `LoadSecretKey(key)`
+Load a secret key from an armored string
+
 `IOpenPgpKeySearch`  
 
 - `SearchHttpKeyServer(address, keyServer)`  
@@ -22,14 +44,3 @@ Use the [Web Key Directory (WKD)](https://wiki.gnupg.org/WKD) protocol to search
 - `GetHashedUserId(userName)`  
 Generate the hashed user-id (hu), used by WKD protocol.  
 The hu is the user part of the e-mail address, SHA-1 hashed and z-base32 converted.
-
-`IOpenPgpEncryption`
-
-- `GenerateKeyPair(string identity, string passPhrase)`  
-Generate a new pgp key pair
-
-- `Encrypt(message, publicKey)`  
-Encypt the message using the provided public key
-
-- `Decrypt(message, privateKey, passPhrase)`
-Decrypt the message using the provided private key and its pass phrase
