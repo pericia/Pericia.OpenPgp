@@ -67,8 +67,10 @@ l7kkkgh8anR4kuki/pMoweSNxnOIORdQwMqqhe4GFmMfv8HC9wO1zGD8W2G9
         public void ExportTest()
         {
             IOpenPgpKeyManagement keys = new OpenPgpKeyManagement();
+            var passPhrase = "pass phrase 1234";
+            var key = keys.GenerateKeyPair("Mail@example.org", passPhrase);
 
-            var key = keys.GenerateKeyPair("Mail@example.org","pass phrase 1234");
+            // Public key
             var originalFingerPrint = key.PublicKey.GetFingerprint();
 
             var exportedPublicKey = keys.Export(key.PublicKey);
@@ -81,6 +83,18 @@ l7kkkgh8anR4kuki/pMoweSNxnOIORdQwMqqhe4GFmMfv8HC9wO1zGD8W2G9
             {
                 Assert.Equal(originalFingerPrint[i], reimportedFingerprint[i]);
             }
+
+
+            // Private key
+            var exportedSecretKey = keys.Export(key);
+            var reimportedSecretKey = keys.LoadSecretKey(exportedSecretKey);
+
+            // Imported key should allow to decrypt message
+            IOpenPgpEncryption pgp = new OpenPgpEncryption();
+
+            var encrypted = pgp.Encrypt("Hello", key.PublicKey);
+            var decrypted = pgp.Decrypt(encrypted, reimportedSecretKey, passPhrase);
+            Assert.Equal("Hello", decrypted);
         }
     }
 }

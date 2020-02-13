@@ -71,7 +71,7 @@ namespace Pericia.OpenPgp
         }
 
 
-        private string Decrypt(Stream input, PgpPrivateKey privateKey)
+        private string Decrypt(Stream input, PgpSecretKey secretKey, string passPhrase)
         {
             input = PgpUtilities.GetDecoderStream(input);
 
@@ -89,6 +89,7 @@ namespace Pericia.OpenPgp
 
             PgpPublicKeyEncryptedData pbe = enc.GetEncryptedDataObjects().Cast<PgpPublicKeyEncryptedData>().First();
             Stream clear;
+            PgpPrivateKey privateKey = secretKey.ExtractPrivateKey(passPhrase.ToCharArray());
             clear = pbe.GetDataStream(privateKey);
             PgpObjectFactory plainFact = new PgpObjectFactory(clear);
             PgpObject message = plainFact.NextPgpObject();
@@ -103,7 +104,7 @@ namespace Pericia.OpenPgp
                     message = o.NextPgpObject();
                 }
 
-                var ld =  (PgpLiteralData)message;
+                var ld = (PgpLiteralData)message;
                 var unc = ld.GetInputStream();
                 var reader = new StreamReader(unc);
                 return reader.ReadToEnd();
@@ -112,19 +113,19 @@ namespace Pericia.OpenPgp
             throw new NotImplementedException();
         }
 
-        public string Decrypt(string message, PgpPrivateKey privateKey)
+        public string Decrypt(string message, PgpSecretKey secretKey, string passPhrase)
         {
             var messageData = Encoding.UTF8.GetBytes(message);
-            return Decrypt(messageData, privateKey);
+            return Decrypt(messageData, secretKey, passPhrase);
         }
 
-        public string Decrypt(byte[] message, PgpPrivateKey privateKey)
+        public string Decrypt(byte[] message, PgpSecretKey secretKey, string passPhrase)
         {
             var stream = new MemoryStream();
             stream.Write(message, 0, message.Length);
             stream.Position = 0;
 
-            return Decrypt(stream, privateKey);
+            return Decrypt(stream, secretKey, passPhrase);
         }
     }
 }

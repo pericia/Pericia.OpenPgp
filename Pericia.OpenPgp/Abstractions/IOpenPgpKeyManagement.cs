@@ -7,10 +7,12 @@ namespace Pericia.OpenPgp
 {
     public interface IOpenPgpKeyManagement
     {
-        PgpKeyPair GenerateKeyPair(string identity, string passPhrase);
+        PgpSecretKey GenerateKeyPair(string identity, string passPhrase);
 
         PgpPublicKey LoadPublicKey(string key);
-        PgpPrivateKey LoadPrivateKey(string key, string passPhrase);
+        PgpPublicKey LoadPublicKey(byte[] key);
+        PgpSecretKey LoadSecretKey(string key);
+        PgpSecretKey LoadSecretKey(byte[] key);
 
         string Export(PgpPublicKey publicKey);
         string Export(PgpSecretKey secretKey);

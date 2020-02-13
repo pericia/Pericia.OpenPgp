@@ -14,7 +14,9 @@ namespace Pericia.OpenPgp.Tests
             IOpenPgpEncryption pgp = new OpenPgpEncryption();
             IOpenPgpKeyManagement keys = new OpenPgpKeyManagement();
 
-            var keyPair = keys.GenerateKeyPair("dest@example.org", "pass phrase 1234");
+            var passPhrase = "pass phrase 1234";
+
+            var keyPair = keys.GenerateKeyPair("dest@example.org", passPhrase);
 
             // We encrypt the message using the public key
             string message = "This message is very secret";
@@ -24,12 +26,15 @@ namespace Pericia.OpenPgp.Tests
             Assert.NotEqual(message, encrypted);
 
             // Now we can decrypt it with the private key
-            var decrypted = pgp.Decrypt(encrypted, keyPair.PrivateKey);
+            var decrypted = pgp.Decrypt(encrypted, keyPair, passPhrase);
             Assert.Equal(message, decrypted);
 
-            // If we try to decrypt without private key, we should have an Exception
-            var badKey = keys.GenerateKeyPair("hacker@example.org", "pass phrase 5678");
-            Assert.ThrowsAny<Exception>(() => pgp.Decrypt(encrypted, badKey.PrivateKey));
+            // If we try to decrypt without private key or with bad password, we should have an Exception
+            var badPassPhrase = "pass phrase 5678";
+            Assert.ThrowsAny<Exception>(() => pgp.Decrypt(encrypted, keyPair, badPassPhrase));
+
+            var badKey = keys.GenerateKeyPair("hacker@example.org", badPassPhrase);
+            Assert.ThrowsAny<Exception>(() => pgp.Decrypt(encrypted, badKey, badPassPhrase));
         }
     }
 }

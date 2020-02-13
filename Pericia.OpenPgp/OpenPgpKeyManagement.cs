@@ -14,7 +14,7 @@ namespace Pericia.OpenPgp
     public class OpenPgpKeyManagement : IOpenPgpKeyManagement
     {
 
-        public PgpKeyPair GenerateKeyPair(string identity, string passPhrase)
+        public PgpSecretKey GenerateKeyPair(string identity, string passPhrase)
         {
             if (string.IsNullOrEmpty(identity)) throw new ArgumentException("Identity must be supplied", nameof(identity));
             if (string.IsNullOrEmpty(passPhrase)) throw new ArgumentException("Pass phrase must be supplied", nameof(passPhrase));
@@ -39,7 +39,8 @@ namespace Pericia.OpenPgp
                 new SecureRandom()
                 );
 
-            return new PgpKeyPair(secretKey.PublicKey, secretKey.ExtractPrivateKey(passPhrase.ToCharArray()));
+            return secretKey;
+            //return new PgpKeyPair(secretKey.PublicKey, secretKey.ExtractPrivateKey(passPhrase.ToCharArray()));
         }
 
         public PgpPublicKey LoadPublicKey(string publicKey)
@@ -54,10 +55,10 @@ namespace Pericia.OpenPgp
             return LoadPublicKey(inputStream);
         }
 
-        public PgpPublicKey LoadPublicKey(Stream inputStream)
+        private PgpPublicKey LoadPublicKey(Stream inputStream)
         {
             var armoredStream = PgpUtilities.GetDecoderStream(inputStream);
-            PgpPublicKeyRingBundle pgpPub = new PgpPublicKeyRingBundle(armoredStream);
+            var pgpPub = new PgpPublicKeyRingBundle(armoredStream);
 
             foreach (PgpPublicKeyRing keyRing in pgpPub.GetKeyRings())
             {
@@ -73,9 +74,29 @@ namespace Pericia.OpenPgp
             throw new ArgumentException("Can't find encryption key in key ring.");
         }
 
-        public PgpPrivateKey LoadPrivateKey(string key, string passPhrase)
+        public PgpSecretKey LoadSecretKey(string key)
         {
-            throw new NotImplementedException();
+            byte[] byteArray = Encoding.ASCII.GetBytes(key);
+            return LoadSecretKey(byteArray);
+        }
+
+        public PgpSecretKey LoadSecretKey(byte[] key)
+        {
+            Stream inputStream = new MemoryStream(key);
+            return LoadSecretKey(inputStream);
+        }
+
+        private PgpSecretKey LoadSecretKey(Stream inputStream)
+        {
+            var armoredStream = PgpUtilities.GetDecoderStream(inputStream);
+            var pgpSecretKeyBundle = new PgpSecretKeyRingBundle(armoredStream);
+
+            foreach (PgpSecretKeyRing keyRing in pgpSecretKeyBundle.GetKeyRings())
+            {
+                return keyRing.GetSecretKey();
+            }
+
+            throw new ArgumentException("Can't find secret key in key ring.");
         }
 
         public string Export(PgpPublicKey publicKey)
