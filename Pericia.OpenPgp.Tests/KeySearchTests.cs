@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Pericia.OpenPgp.Tests
 {
-    public class KeyTests
+    public class KeySearchTests
     {
 
         [Fact]
@@ -36,7 +36,7 @@ namespace Pericia.OpenPgp.Tests
 
             Assert.NotNull(key);
 
-            CheckFingerprint(key, "4805b5106ca0eab809e16b798bfc4819e62f4977");
+            Utils.CheckFingerprint(key, "4805b5106ca0eab809e16b798bfc4819e62f4977");
         }
 
         [Fact]
@@ -49,17 +49,7 @@ namespace Pericia.OpenPgp.Tests
 
             Assert.NotNull(key);
 
-            CheckFingerprint(key, "4805b5106ca0eab809e16b798bfc4819e62f4977");
-        }
-
-        private void CheckFingerprint(PgpPublicKey key, string expectedFingerprint)
-        {
-            var fingerprint = key.GetFingerprint();
-            for (int i = 0; i < fingerprint.Length; i++)
-            {
-                var expectedByteValue = int.Parse(expectedFingerprint.Substring(i * 2, 2), NumberStyles.HexNumber);
-                Assert.Equal(expectedByteValue, fingerprint[i]);
-            }
+            Utils.CheckFingerprint(key, "4805b5106ca0eab809e16b798bfc4819e62f4977");
         }
 
         [Fact]
