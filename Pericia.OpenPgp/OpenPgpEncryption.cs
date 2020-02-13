@@ -7,6 +7,7 @@ using Org.BouncyCastle.Security;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Pericia.OpenPgp
@@ -101,9 +102,61 @@ namespace Pericia.OpenPgp
             return bOut.ToArray();
         }
 
-        public string Decrypt(string message, PgpPrivateKey privateKey, string passPhrase)
+
+        private string Decrypt(Stream input, PgpPrivateKey privateKey)
         {
+            input = PgpUtilities.GetDecoderStream(input);
+
+            PgpObjectFactory pgpObjF = new PgpObjectFactory(input);
+            PgpEncryptedDataList enc;
+            PgpObject obj = pgpObjF.NextPgpObject();
+            if (obj is PgpEncryptedDataList)
+            {
+                enc = (PgpEncryptedDataList)obj;
+            }
+            else
+            {
+                enc = (PgpEncryptedDataList)pgpObjF.NextPgpObject();
+            }
+
+            PgpPublicKeyEncryptedData pbe = enc.GetEncryptedDataObjects().Cast<PgpPublicKeyEncryptedData>().First();
+            Stream clear;
+            clear = pbe.GetDataStream(privateKey);
+            PgpObjectFactory plainFact = new PgpObjectFactory(clear);
+            PgpObject message = plainFact.NextPgpObject();
+            if (message is PgpCompressedData)
+            {
+                PgpCompressedData cData = (PgpCompressedData)message;
+                Stream compDataIn = cData.GetDataStream();
+                PgpObjectFactory o = new PgpObjectFactory(compDataIn);
+                message = o.NextPgpObject();
+                if (message is PgpOnePassSignatureList)
+                {
+                    message = o.NextPgpObject();
+                }
+
+                var ld =  (PgpLiteralData)message;
+                var unc = ld.GetInputStream();
+                var reader = new StreamReader(unc);
+                return reader.ReadToEnd();
+            }
+
             throw new NotImplementedException();
+        }
+
+        public string Decrypt(string message, PgpPrivateKey privateKey)
+        {
+            var messageData = Encoding.UTF8.GetBytes(message);
+            return Decrypt(messageData, privateKey);
+        }
+
+        public string Decrypt(byte[] message, PgpPrivateKey privateKey)
+        {
+            var stream = new MemoryStream();
+            stream.Write(message, 0, message.Length);
+            stream.Position = 0;
+
+            return Decrypt(stream, privateKey);
         }
     }
 }

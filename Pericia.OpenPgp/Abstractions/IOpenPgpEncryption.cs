@@ -12,6 +12,7 @@ namespace Pericia.OpenPgp
         string Encrypt(string message, PgpPublicKey publicKey);
         string Encrypt(byte[] message, PgpPublicKey publicKey);
 
-        string Decrypt(string message, PgpPrivateKey privateKey, string passPhrase);
+        string Decrypt(string message, PgpPrivateKey privateKey);
+        string Decrypt(byte[] message, PgpPrivateKey privateKey);
     }
 }
