@@ -55,9 +55,9 @@ namespace Pericia.OpenPgp
             return LoadPublicKey(inputStream);
         }
 
-        private PgpPublicKey LoadPublicKey(Stream inputStream)
+        public PgpPublicKey LoadPublicKey(Stream publicKey)
         {
-            var armoredStream = PgpUtilities.GetDecoderStream(inputStream);
+            var armoredStream = PgpUtilities.GetDecoderStream(publicKey);
             var pgpPub = new PgpPublicKeyRingBundle(armoredStream);
 
             foreach (PgpPublicKeyRing keyRing in pgpPub.GetKeyRings())
@@ -86,9 +86,9 @@ namespace Pericia.OpenPgp
             return LoadSecretKey(inputStream);
         }
 
-        private PgpSecretKey LoadSecretKey(Stream inputStream)
+        public PgpSecretKey LoadSecretKey(Stream key)
         {
-            var armoredStream = PgpUtilities.GetDecoderStream(inputStream);
+            var armoredStream = PgpUtilities.GetDecoderStream(key);
             var pgpSecretKeyBundle = new PgpSecretKeyRingBundle(armoredStream);
 
             foreach (PgpSecretKeyRing keyRing in pgpSecretKeyBundle.GetKeyRings())
@@ -121,7 +121,6 @@ namespace Pericia.OpenPgp
             var reader = new StreamReader(bOut);
             return reader.ReadToEnd();
         }
-
 
     }
 }
