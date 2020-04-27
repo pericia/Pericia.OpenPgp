@@ -31,7 +31,7 @@ namespace Pericia.OpenPgp.Tests
         {
             IOpenPgpKeySearch pgpKeys = new OpenPgpKeySearch();
 
-            var email = "glacasa@protonmail.com";
+            var email = "blog@lacasa.fr";
             var key = await pgpKeys.SearchWebKeyDirectory(email);
 
             Assert.NotNull(key);
@@ -44,7 +44,7 @@ namespace Pericia.OpenPgp.Tests
         {
             IOpenPgpKeySearch pgpKeys = new OpenPgpKeySearch();
 
-            var email = "glacasa@protonmail.com";
+            var email = "blog@lacasa.fr";
             var key = await pgpKeys.SearchHttpKeyServer(email);
 
             Assert.NotNull(key);
