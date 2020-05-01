@@ -41,10 +41,7 @@ namespace Pericia.OpenPgp
 
         public async Task<PgpPublicKey?> SearchWebKeyDirectory(MailAddress address)
         {
-            var host = address.Host;
-            var hu = GetHashedUserId(address);
-
-            var url = $"https://{host}/.well-known/openpgpkey/hu/{hu}";
+            string url = GetWkdUrl(address);
 
             var request = new HttpClient();
             var response = await request.GetAsync(url);
@@ -76,6 +73,14 @@ namespace Pericia.OpenPgp
             }
 
             throw new ArgumentException("Can't find encryption key in key ring.");
+        }
+
+        public string GetWkdUrl(MailAddress address)
+        {
+            var host = address.Host;
+            var hu = GetHashedUserId(address);
+
+            return $"https://{host}/.well-known/openpgpkey/hu/{hu}";
         }
 
         public string GetHashedUserId(string userName)
