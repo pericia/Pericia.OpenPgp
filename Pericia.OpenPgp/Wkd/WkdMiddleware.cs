@@ -18,8 +18,7 @@ namespace Pericia.OpenPgp
         private const string WKD_PREFIX = "/.well-known/openpgpkey/hu/";
         public Task InvokeAsync(HttpContext context, WkdSavedKeys savedKeys)
         {
-            if (context.Request.Scheme == "https" && 
-                context.Request.Path.HasValue &&
+            if (context.Request.Path.HasValue &&
                 context.Request.Path.Value.StartsWith(WKD_PREFIX))
             {
                 var host = context.Request.Host.Host;
