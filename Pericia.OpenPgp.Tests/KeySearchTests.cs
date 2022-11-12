@@ -27,11 +27,24 @@ namespace Pericia.OpenPgp.Tests
         }
 
         [Fact]
-        public async Task SearchWebKeyDirectoryTest()
+        public async Task SearchWebKeyDirectoryDirectTest()
         {
             IOpenPgpKeySearch pgpKeys = new OpenPgpKeySearch();
 
             var email = "blog@lacasa.fr";
+            var key = await pgpKeys.SearchWebKeyDirectory(email);
+
+            Assert.NotNull(key);
+
+            Utils.CheckFingerprint(key, "4805b5106ca0eab809e16b798bfc4819e62f4977");
+        }
+
+        [Fact]
+        public async Task SearchWebKeyDirectoryAdvancedTest()
+        {
+            IOpenPgpKeySearch pgpKeys = new OpenPgpKeySearch();
+
+            var email = "glacasa@protonmail.com";
             var key = await pgpKeys.SearchWebKeyDirectory(email);
 
             Assert.NotNull(key);
