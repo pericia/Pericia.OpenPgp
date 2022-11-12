@@ -51,15 +51,16 @@ namespace Pericia.OpenPgp
         public async Task<PgpPublicKey?> SearchWebKeyDirectory(MailAddress address)
         {
             // Load keys from WDK url
+            // https://www.uriports.com/blog/setting-up-openpgp-web-key-directory/
             // https://metacode.biz/openpgp/web-key-directory
 
-            var key = await LoadFromUrl(GetDirectWkdUrl(address));
+            var key = await LoadFromUrl(GetAdvancedWkdUrl(address));
             if (key != null)
             {
                 return key;
             }
 
-            key = await LoadFromUrl(GetAdvancedWkdUrl(address));
+            key = await LoadFromUrl(GetDirectWkdUrl(address));
             if (key != null)
             {
                 return key;
