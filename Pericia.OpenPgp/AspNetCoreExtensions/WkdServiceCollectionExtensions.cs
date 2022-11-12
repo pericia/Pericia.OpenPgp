@@ -68,7 +68,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
                     var host = mailAddress.Host;
                     Dictionary<string, string> hostDic;
-                    if (!context.PublicKeys.TryGetValue(host, out hostDic))
+                    if (!context.PublicKeys.TryGetValue(host, out hostDic!))
                     {
                         hostDic = new Dictionary<string, string>();
                         context.PublicKeys.Add(host, hostDic);

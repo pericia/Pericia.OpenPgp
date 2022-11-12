@@ -1,7 +1,7 @@
 ﻿// LICENSE : The Code Project Open License (CPOL) 1.02
 // https://raw.githubusercontent.com/ericlau-solid/Base3264-UrlEncoder/master/LICENSE.md
 // https://github.com/ericlau-solid/Base3264-UrlEncoder/blob/master/Base3264-UrlEncoder/Base32Url.cs
-
+#nullable disable
 using System;
 using System.Collections.Generic;
 using System.Globalization;
