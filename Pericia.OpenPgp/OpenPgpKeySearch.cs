@@ -54,20 +54,12 @@ namespace Pericia.OpenPgp
             // https://www.uriports.com/blog/setting-up-openpgp-web-key-directory/
             // https://metacode.biz/openpgp/web-key-directory
 
-            var key = await LoadFromUrl(GetAdvancedWkdUrl(address));
-            if (key != null)
-            {
-                return key;
-            }
-
-            key = await LoadFromUrl(GetDirectWkdUrl(address));
-            if (key != null)
-            {
-                return key;
-            }
-
-            return null;
+            return await SearchAdvancedWkd(address) 
+                ?? await SearchDirectWkd(address);
         }
+
+        public Task<PgpPublicKey?> SearchAdvancedWkd(MailAddress address)=> LoadFromUrl(GetAdvancedWkdUrl(address));
+        public Task<PgpPublicKey?> SearchDirectWkd(MailAddress address)=> LoadFromUrl(GetDirectWkdUrl(address));
 
         private static async Task<PgpPublicKey?> LoadFromUrl(string url)
         {
