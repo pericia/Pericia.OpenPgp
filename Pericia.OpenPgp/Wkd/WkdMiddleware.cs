@@ -31,7 +31,7 @@ namespace Pericia.OpenPgp
                 {
                     host = host.Substring(ADVANCED_WKD_HOST_PREFIX.Length);
                     var fullPrefix = WKD_PREFIX + host + "/";
-                    suffix = context.Request.Path.Value.Substring((WKD_PREFIX + fullPrefix).Length);
+                    suffix = context.Request.Path.Value.Substring(fullPrefix.Length);
                 }
                 else
                 {
