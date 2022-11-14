@@ -4,6 +4,7 @@ using Org.BouncyCastle.Bcpg.OpenPgp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -31,11 +32,10 @@ namespace Pericia.OpenPgp.Tests
         [Fact]
         public async Task SearchWebKeyDirectoryDirectTest()
         {
+            var pgpKeys = new OpenPgpKeySearch(new TestHttpClientFactory(), new NullLogger<OpenPgpKeySearch>());
 
-            IOpenPgpKeySearch pgpKeys = new OpenPgpKeySearch(new TestHttpClientFactory(), new NullLogger<OpenPgpKeySearch>());
-
-            var email = "blog@lacasa.fr";
-            var key = await pgpKeys.SearchWebKeyDirectory(email);
+            var email = new MailAddress("blog@lacasa.fr");
+            var key = await pgpKeys.SearchDirectWkd(email);
 
             Assert.NotNull(key);
 
@@ -45,11 +45,11 @@ namespace Pericia.OpenPgp.Tests
         [Fact]
         public async Task SearchWebKeyDirectoryAdvancedTest()
         {
-            IOpenPgpKeySearch pgpKeys = new OpenPgpKeySearch(new TestHttpClientFactory(), new NullLogger<OpenPgpKeySearch>());
+            var pgpKeys = new OpenPgpKeySearch(new TestHttpClientFactory(), new NullLogger<OpenPgpKeySearch>());
 
-            var email = "glacasa@protonmail.com";
-            var key = await pgpKeys.SearchWebKeyDirectory(email);
-
+            var email = new MailAddress("blog@lacasa.fr");
+            var key = await pgpKeys.SearchAdvancedWkd(email);
+            
             Assert.NotNull(key);
 
             Utils.CheckFingerprint(key, "4805b5106ca0eab809e16b798bfc4819e62f4977");
