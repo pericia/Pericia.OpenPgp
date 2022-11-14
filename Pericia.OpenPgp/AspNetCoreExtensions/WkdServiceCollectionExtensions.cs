@@ -45,7 +45,6 @@ namespace Microsoft.Extensions.DependencyInjection
         private static WkdSavedKeys LoadPublicKeys(IEnumerable<PgpPublicKey> publicKeys, OpenPgpKeyManagement? keyManagement = null)
         {
             var context = new WkdSavedKeys();
-            var keySearch = new OpenPgpKeySearch();
             if (keyManagement == null)
             {
                 keyManagement = new OpenPgpKeyManagement();
@@ -74,7 +73,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         context.PublicKeys.Add(host, hostDic);
                     }
 
-                    var user = keySearch.GetHashedUserId(mailAddress.User);
+                    var user = OpenPgpKeySearch.GetHashedUserIdStatic(mailAddress.User);
 
                     if (hostDic.ContainsKey(user))
                     {

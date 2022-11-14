@@ -1,4 +1,6 @@
-﻿using Org.BouncyCastle.Bcpg.OpenPgp;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,7 +16,7 @@ namespace Pericia.OpenPgp.Tests
         [Fact]
         public async Task SearchErrorTest()
         {
-            IOpenPgpKeySearch pgpKeys = new OpenPgpKeySearch();
+            IOpenPgpKeySearch pgpKeys = new OpenPgpKeySearch(new TestHttpClientFactory(), new NullLogger<OpenPgpKeySearch>());
 
             await Assert.ThrowsAsync<FormatException>(() => pgpKeys.SearchWebKeyDirectory("notanaddress"));
 
@@ -29,7 +31,8 @@ namespace Pericia.OpenPgp.Tests
         [Fact]
         public async Task SearchWebKeyDirectoryDirectTest()
         {
-            IOpenPgpKeySearch pgpKeys = new OpenPgpKeySearch();
+
+            IOpenPgpKeySearch pgpKeys = new OpenPgpKeySearch(new TestHttpClientFactory(), new NullLogger<OpenPgpKeySearch>());
 
             var email = "blog@lacasa.fr";
             var key = await pgpKeys.SearchWebKeyDirectory(email);
@@ -42,7 +45,7 @@ namespace Pericia.OpenPgp.Tests
         [Fact]
         public async Task SearchWebKeyDirectoryAdvancedTest()
         {
-            IOpenPgpKeySearch pgpKeys = new OpenPgpKeySearch();
+            IOpenPgpKeySearch pgpKeys = new OpenPgpKeySearch(new TestHttpClientFactory(), new NullLogger<OpenPgpKeySearch>());
 
             var email = "glacasa@protonmail.com";
             var key = await pgpKeys.SearchWebKeyDirectory(email);
@@ -55,7 +58,7 @@ namespace Pericia.OpenPgp.Tests
         [Fact]
         public async Task SearchHttpKeyserverProtocol()
         {
-            IOpenPgpKeySearch pgpKeys = new OpenPgpKeySearch();
+            IOpenPgpKeySearch pgpKeys = new OpenPgpKeySearch(new TestHttpClientFactory(), new NullLogger<OpenPgpKeySearch>());
 
             var email = "blog@lacasa.fr";
             var key = await pgpKeys.SearchHttpKeyServer(email);
@@ -68,7 +71,7 @@ namespace Pericia.OpenPgp.Tests
         [Fact]
         public void HashedUserTest()
         {
-            IOpenPgpKeySearch pgpKeys = new OpenPgpKeySearch();
+            IOpenPgpKeySearch pgpKeys = new OpenPgpKeySearch(new TestHttpClientFactory(), new NullLogger<OpenPgpKeySearch>());
 
             var hu = pgpKeys.GetHashedUserId("me");
             Assert.Equal("s8y7oh5xrdpu9psba3i5ntk64ohouhga", hu);

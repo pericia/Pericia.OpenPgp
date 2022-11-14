@@ -1,4 +1,5 @@
 ﻿using MhanoHarkness;
+using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,16 @@ namespace Pericia.OpenPgp
 {
     public class OpenPgpKeySearch : IOpenPgpKeySearch
     {
+        private readonly IHttpClientFactory httpClientFactory;
+        private readonly ILogger logger;
+
+
+        public OpenPgpKeySearch(IHttpClientFactory httpClientFactory, ILogger<OpenPgpKeySearch> logger)
+        {
+            this.httpClientFactory = httpClientFactory;
+            this.logger = logger;
+        }
+
         // Key server
 
         private const string DEFAULT_KEY_SERVER = "https://keys.openpgp.org";
@@ -22,21 +33,10 @@ namespace Pericia.OpenPgp
         public Task<PgpPublicKey?> SearchHttpKeyServer(MailAddress address) => SearchHttpKeyServer(address, DEFAULT_KEY_SERVER);
         public Task<PgpPublicKey?> SearchHttpKeyServer(string address, string keyServer) => SearchHttpKeyServer(new MailAddress(address), keyServer);
 
-        public async Task<PgpPublicKey?> SearchHttpKeyServer(MailAddress address, string keyServer)
+        public Task<PgpPublicKey?> SearchHttpKeyServer(MailAddress address, string keyServer)
         {
             string url = GetKeyServerSearchUrl(address, keyServer);
-
-            var request = new HttpClient();
-            var response = await request.GetAsync(url);
-
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                var key = ReadPublicKey(await response.Content.ReadAsStreamAsync());
-
-                return key;
-            }
-
-            return null;
+            return LoadFromUrl(url);
         }
 
         public string GetKeyServerSearchUrl(MailAddress address, string keyServer)
@@ -54,23 +54,30 @@ namespace Pericia.OpenPgp
             // https://www.uriports.com/blog/setting-up-openpgp-web-key-directory/
             // https://metacode.biz/openpgp/web-key-directory
 
-            return await SearchAdvancedWkd(address) 
+            return await SearchAdvancedWkd(address)
                 ?? await SearchDirectWkd(address);
         }
 
-        public Task<PgpPublicKey?> SearchAdvancedWkd(MailAddress address)=> LoadFromUrl(GetAdvancedWkdUrl(address));
-        public Task<PgpPublicKey?> SearchDirectWkd(MailAddress address)=> LoadFromUrl(GetDirectWkdUrl(address));
+        public Task<PgpPublicKey?> SearchAdvancedWkd(MailAddress address) => LoadFromUrl(GetAdvancedWkdUrl(address));
+        public Task<PgpPublicKey?> SearchDirectWkd(MailAddress address) => LoadFromUrl(GetDirectWkdUrl(address));
 
-        private static async Task<PgpPublicKey?> LoadFromUrl(string url)
+        private async Task<PgpPublicKey?> LoadFromUrl(string url)
         {
-            var request = new HttpClient();
-            var response = await request.GetAsync(url);
-
-            if (response.StatusCode == HttpStatusCode.OK)
+            var client = httpClientFactory.CreateClient();
+            try
             {
-                var key = ReadPublicKey(await response.Content.ReadAsStreamAsync());
+                var response = await client.GetAsync(url);
 
-                return key;
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var key = ReadPublicKey(await response.Content.ReadAsStreamAsync());
+
+                    return key;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Error while loading key");
             }
 
             return null;
@@ -107,7 +114,11 @@ namespace Pericia.OpenPgp
             return $"https://openpgpkey.{address.Host}/.well-known/openpgpkey/{address.Host}/hu/{hu}?l={address.User}";
         }
 
-        public string GetHashedUserId(string userName)
+        public string GetHashedUserId(MailAddress address) => GetHashedUserIdStatic(address.User);
+
+        public string GetHashedUserId(string userName) => GetHashedUserIdStatic(userName);
+
+        internal static string GetHashedUserIdStatic(string userName)
         {
             if (string.IsNullOrEmpty(userName)) throw new ArgumentException("userName can't be empty", nameof(userName));
 
@@ -121,8 +132,6 @@ namespace Pericia.OpenPgp
             var hu = base32Encoder.Encode(hashed);
             return hu;
         }
-
-        public string GetHashedUserId(MailAddress address) => GetHashedUserId(address.User);
 
     }
 }
