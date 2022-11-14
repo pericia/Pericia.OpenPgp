@@ -1,5 +1,4 @@
-﻿using MhanoHarkness;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,7 @@ using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Wiry.Base32;
 
 namespace Pericia.OpenPgp
 {
@@ -127,9 +127,8 @@ namespace Pericia.OpenPgp
 
             var sha1 = SHA1.Create();
             var hashed = sha1.ComputeHash(Encoding.UTF8.GetBytes(userName));
-
-            var base32Encoder = new Base32Url(Base32Url.ZBase32Alphabet);
-            var hu = base32Encoder.Encode(hashed);
+            
+            var hu = Base32Encoding.ZBase32.GetString(hashed);
             return hu;
         }
 
