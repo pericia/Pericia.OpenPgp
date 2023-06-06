@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Pericia.OpenPgp
+namespace Pericia.OpenPgp.AspNetCore.Wkd
 {
     internal class WkdSavedKeys
     {

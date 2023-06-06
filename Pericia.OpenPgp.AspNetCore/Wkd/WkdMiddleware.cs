@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pericia.OpenPgp
+namespace Pericia.OpenPgp.AspNetCore.Wkd
 {
     internal class WkdMiddleware
     {

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
+using Pericia.OpenPgp.AspNetCore.Wkd;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

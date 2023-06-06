@@ -10,7 +10,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AC82C6E4-A86D-46F2-8D22-7865B7958CAD}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		global.json = global.json
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pericia.OpenPgp.AspNetCore", "Pericia.OpenPgp.AspNetCore\Pericia.OpenPgp.AspNetCore.csproj", "{104D3761-D979-4BA7-B660-248FDA86E001}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +29,10 @@ Global
 		{09E6ACFC-7CA5-4A04-BCBA-36E709233973}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09E6ACFC-7CA5-4A04-BCBA-36E709233973}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09E6ACFC-7CA5-4A04-BCBA-36E709233973}.Release|Any CPU.Build.0 = Release|Any CPU
+		{104D3761-D979-4BA7-B660-248FDA86E001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{104D3761-D979-4BA7-B660-248FDA86E001}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{104D3761-D979-4BA7-B660-248FDA86E001}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{104D3761-D979-4BA7-B660-248FDA86E001}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

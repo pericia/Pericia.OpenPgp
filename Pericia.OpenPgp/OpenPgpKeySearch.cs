@@ -118,7 +118,7 @@ namespace Pericia.OpenPgp
 
         public string GetHashedUserId(string userName) => GetHashedUserIdStatic(userName);
 
-        internal static string GetHashedUserIdStatic(string userName)
+        public static string GetHashedUserIdStatic(string userName)
         {
             if (string.IsNullOrEmpty(userName)) throw new ArgumentException("userName can't be empty", nameof(userName));
 

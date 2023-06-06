@@ -1,4 +1,4 @@
-﻿using Pericia.OpenPgp;
+﻿using Pericia.OpenPgp.AspNetCore.Wkd;
 using System;
 using System.Collections.Generic;
 using System.Text;

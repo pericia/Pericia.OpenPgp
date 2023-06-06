@@ -92,8 +92,8 @@ l7kkkgh8anR4kuki/pMoweSNxnOIORdQwMqqhe4GFmMfv8HC9wO1zGD8W2G9
             // Imported key should allow to decrypt message
             IOpenPgpEncryption pgp = new OpenPgpEncryption();
 
-            var encrypted = pgp.Encrypt("Hello", key.PublicKey);
-            var decrypted = pgp.Decrypt(encrypted, reimportedSecretKey, passPhrase);
+            var encrypted = pgp.EncryptText("Hello", key.PublicKey);
+            var decrypted = pgp.DecryptText(encrypted, reimportedSecretKey, passPhrase);
             Assert.Equal("Hello", decrypted);
         }
     }
