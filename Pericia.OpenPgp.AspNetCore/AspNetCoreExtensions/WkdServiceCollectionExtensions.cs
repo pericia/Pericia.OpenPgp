@@ -55,12 +55,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 foreach (string userId in key.GetUserIds())
                 {
-                    MailAddress mailAddress;
-                    try
-                    {
-                        mailAddress = new MailAddress(userId);
-                    }
-                    catch (FormatException)
+                    if (!MailAddress.TryCreate(userId, out var mailAddress))
                     {
                         // UserId is not a mail adress, we don't save it
                         continue;
