@@ -13,75 +13,12 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class WkdServiceCollectionExtensions
     {
-        public static IServiceCollection AddWebKeyDirectory(this IServiceCollection services, params PgpPublicKey[] publicKeys)
+        public static WkdBuilder AddWebKeyDirectory(this IServiceCollection services)
         {
-            services.AddSingleton(LoadPublicKeys(publicKeys));
-            return services;
+            var builder = new WkdBuilder();
+            services.AddSingleton(builder.WkdSavedKeys);
+            return builder;
         }
 
-        public static IServiceCollection AddWebKeyDirectory(this IServiceCollection services, IEnumerable<PgpPublicKey> publicKeys)
-        {
-            services.AddSingleton(LoadPublicKeys(publicKeys));
-            return services;
-        }
-
-        public static IServiceCollection AddWebKeyDirectory(this IServiceCollection services, IDirectoryContents directory)
-        {
-            var keyManagement = new OpenPgpKeyManagement();
-            var publicKeys = directory.Select(file => keyManagement.LoadPublicKey(file.CreateReadStream()));
-            services.AddSingleton(LoadPublicKeys(publicKeys));
-
-            return services;
-        }
-
-        public static IServiceCollection AddWebKeyDirectory(this IServiceCollection services, string path)
-        {
-            var keyManagement = new OpenPgpKeyManagement();
-            var publicKeys = Directory.GetFiles(path).Select(file => keyManagement.LoadPublicKey(File.OpenRead(file)));
-            services.AddSingleton(LoadPublicKeys(publicKeys));
-
-            return services;
-        }
-
-        private static WkdSavedKeys LoadPublicKeys(IEnumerable<PgpPublicKey> publicKeys, OpenPgpKeyManagement? keyManagement = null)
-        {
-            var context = new WkdSavedKeys();
-            if (keyManagement == null)
-            {
-                keyManagement = new OpenPgpKeyManagement();
-            }
-
-            foreach (var key in publicKeys)
-            {
-                foreach (string userId in key.GetUserIds())
-                {
-                    if (!MailAddress.TryCreate(userId, out var mailAddress))
-                    {
-                        // UserId is not a mail adress, we don't save it
-                        continue;
-                    }
-
-                    var host = mailAddress.Host;
-                    Dictionary<string, string> hostDic;
-                    if (!context.PublicKeys.TryGetValue(host, out hostDic!))
-                    {
-                        hostDic = new Dictionary<string, string>();
-                        context.PublicKeys.Add(host, hostDic);
-                    }
-
-                    var user = OpenPgpKeySearch.GetHashedUserIdStatic(mailAddress.User);
-
-                    if (hostDic.ContainsKey(user))
-                    {
-                        // we already have a public key for this e-mail address
-                        continue;
-                    }
-                    var keyString = keyManagement.Export(key);
-                    hostDic.Add(user, keyString);
-                }
-            }
-
-            return context;
-        }
     }
 }
